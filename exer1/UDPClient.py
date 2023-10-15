@@ -1,5 +1,5 @@
 from socket import *
-serverName = '192.168.1.110'
+serverName = 'xxx.xxx.x.xxx'
 serverPort = 12000
 clientSocket = socket(AF_INET, SOCK_DGRAM)
 message = input('Input lowercase sentence:')
