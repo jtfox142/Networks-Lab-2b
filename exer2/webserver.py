@@ -4,7 +4,7 @@ import sys # to use system functions
 serverSocket = socket(AF_INET, SOCK_STREAM)
 
 # code for binding and keeping your socket ready to listen
-serverPort = 12000
+serverPort = 12001
 serverSocket.bind(('',serverPort))
 serverSocket.listen(1)
 
@@ -15,7 +15,7 @@ while True:
     
     try:
         # receive message request
-        message = input()
+        message = connectionSocket.recv(1024).decode()
         #Extract the path of the requested object from the message
         #The path is the second part of the HTTP header, identified by [1]
         filename = message.split()[1]
@@ -30,15 +30,15 @@ while True:
         #Send the content of the requested file to the client (connection socket)
         for i in range(0, len(outputdata)):
             connectionSocket.send(outputdata[i].encode())
-            connectionSocket.send("\r\n".encode())
+            
+        connectionSocket.send("\r\n".encode())
 
         #close the client connection socket
         connectionSocket.close()
     except IOError:
         #Send response message for file not found
-        #TODO:Fill your code here for the ‘404 Not Found’ message
-        print("Error 404: Not Found ")
+        connectionSocket.send("HTTP/1.1 404 Not Found\r\n\r\n".encode())
         #Close client socket
-        serverSocket.close()
+        connectionSocket.close()
     serverSocket.close()
     sys.exit()
